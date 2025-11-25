@@ -1,0 +1,58 @@
+grammar org.gol.Gol with org.eclipse.xtext.common.Terminals
+
+generate gol "http://www.gol.org/Gol"
+
+/* * I defined the root element 'Game' to hold the two main components required by the assignment:
+ * 1. The Grid definition (dimensions and initial state)
+ * 2. The Rules for evolution
+ */
+Game: 
+    grid=Grid 
+    rules=Rules;
+
+/*
+ * I chose a clear structure for the grid. 
+ * 'GridSize' defines the bounds, and 'PopulatedCells' lists the starting coordinates.
+ * I also added support for predefined patterns like Gliders if needed later.
+ */
+Grid: 
+    {Grid} 'Grid' size=GridSize 
+    'PopulatedCells:' populatedCells+=PopulatedCell*
+    ('PredefinedPatterns:' predefinedPatterns+=PredefinedPattern+)?;
+    
+GridSize: 
+    {GridSize} 'GridSize:' '(' 'height:' height=INT ',' 'width:' width=INT ')';
+
+PredefinedPattern: 
+    'Glider' | 'Blinker';
+
+/* Simple coordinate pair (x, y) */
+PopulatedCell: 
+    '(' x=INT ',' y=INT ')';
+
+Rules: 
+    {Rules} 'Rules' rules+=Rule*;
+    
+/* * I structured conditions to handle the comparison operators required by the assignment (<, >, ==).
+ * I also added a separator to allow chaining conditions (e.g., == 2 || == 3).
+ */
+Condition: 
+    boolOp=BoolOp NCount=INT separator=Separator?;
+
+/* * The Rule syntax is designed to read like a natural sentence:
+ * "Each living cell with < 2 neighbors dies"
+ */
+Rule: 
+    'Each' state=State 'cell' 'with' conditions+=Condition+ 'neighbors' result=Outcome;
+
+Separator: 
+    '&&' | '||';
+
+State: 
+    'living' | 'dead';
+    
+BoolOp: 
+    '>' | '<' | '>=' | '<=' | '==';
+        
+Outcome: 
+    'survives' | 'dies' | 'populates';

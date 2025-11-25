@@ -1,0 +1,8 @@
+Grid GridSize: (height: 10, width: 10)
+PopulatedCells: 
+    (15, 15) // Error: Outside grid
+    (5, 5) 
+    (5, 5)   // Error: Identical
+
+Rules
+Each living cell with < 9 neighbors dies

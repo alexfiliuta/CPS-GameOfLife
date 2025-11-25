@@ -1,0 +1,47 @@
+package org.gol.generator
+
+import org.gol.gol.Rule
+import org.gol.gol.Game
+import org.gol.gol.Condition
+import org.gol.gol.Grid
+import org.gol.gol.PopulatedCell
+import java.util.List
+import java.util.ArrayList
+
+/*
+ * Helper class to extract lists from the model for the generator.
+ * This keeps the main generator code cleaner.
+ */
+class Auxiliary {
+    def static List<Rule> getRules(Game root) {
+        var List<Rule> ruleList = new ArrayList<Rule>()
+        for (Rule r : root.rules.rules){
+            ruleList.add(r)
+        }
+        return ruleList
+    }
+    
+    def static List<Condition> getConditions(Rule rule) {
+        var List<Condition> conditionList = new ArrayList<Condition>()
+        for (Condition c: rule.conditions){
+            conditionList.add(c)
+        }
+        return conditionList
+    }
+    
+    def static List<PopulatedCell> getStartingPoints(Grid grid) {
+        var List<PopulatedCell> pointList = new ArrayList<PopulatedCell>()
+        for (PopulatedCell p: grid.populatedCells){
+            pointList.add(p)
+        }
+        return pointList
+    }
+    
+    def static getPesets(Grid grid) {
+        var patternList = new ArrayList<String>()
+        for (p: grid.predefinedPatterns){
+            patternList.add(p)
+        }
+        return patternList
+    }
+}

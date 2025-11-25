@@ -1,0 +1,45 @@
+grammar org.gol.Gol with org.eclipse.xtext.common.Terminals
+
+generate gol "http://www.gol.org/Gol"
+
+Game: 
+    grid=Grid 
+    rules=Rules;
+
+Grid: 
+    {Grid} 'Grid' size=GridSize 
+    'PopulatedCells:' populatedCells+=PopulatedCell*
+    ('PredefinedPatterns:' predefinedPatterns+=PredefinedPattern+)?;
+    
+GridSize: 
+    {GridSize} 'GridSize:' '(' 'height:' height=INT ',' 'width:' width=INT ')';
+
+PredefinedPattern: 
+    'Glider' | 'Blinker';
+
+PopulatedCell: 
+    '(' x=INT ',' y=INT ')';
+
+Rules: 
+    {Rules} 'Rules' rules+=Rule*;
+    
+Condition: 
+    boolOp=BoolOp NCount=INT separator=Separator?;
+
+/* * The Rule syntax is designed to read like a natural sentence:
+ * "Each living cell with < 2 neighbors dies"
+ */
+Rule: 
+    'Each' state=State 'cell' 'with' conditions+=Condition+ 'neighbors' result=Outcome;
+
+Separator: 
+    '&&' | '||';
+
+State: 
+    'living' | 'dead';
+    
+BoolOp: 
+    '>' | '<' | '>=' | '<=' | '==';
+        
+Outcome: 
+    'survives' | 'dies' | 'populates';

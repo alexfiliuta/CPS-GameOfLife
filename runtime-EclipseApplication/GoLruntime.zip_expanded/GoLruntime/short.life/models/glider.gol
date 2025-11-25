@@ -1,0 +1,8 @@
+Grid GridSize: (height: 25, width: 25)
+PopulatedCells: (2, 1) (3, 2) (3, 3) (2, 3) (1, 3)
+
+Rules
+Each living cell with < 2 neighbors dies
+Each living cell with > 3 neighbors dies
+Each living cell with == 2 || == 3 neighbors survives
+Each dead cell with == 3 neighbors populates

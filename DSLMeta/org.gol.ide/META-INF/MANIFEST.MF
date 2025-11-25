@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.gol.ide
+Bundle-ManifestVersion: 2
+Bundle-Name: org.gol.ide
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.gol.ide; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.gol,
+ org.eclipse.xtext.ide,
+ org.eclipse.xtext.xbase.ide,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Export-Package: org.gol.ide.contentassist.antlr.internal,
+ org.gol.ide.contentassist.antlr

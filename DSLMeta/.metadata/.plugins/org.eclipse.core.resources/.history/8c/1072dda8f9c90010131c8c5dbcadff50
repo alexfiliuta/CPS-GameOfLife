@@ -1,0 +1,82 @@
+package org.gol.validation
+
+import org.eclipse.xtext.validation.Check
+import org.gol.gol.Grid
+import org.gol.gol.PopulatedCell
+import org.gol.gol.Rule
+import org.gol.gol.Rules
+import org.gol.gol.Condition
+import org.gol.gol.GolPackage.Literals
+
+class GolValidator extends AbstractGolValidator {
+
+    public static val INVALID_NEIGHBOR_COUNT = 'invalidNeighborCount'
+
+    @Check
+    def checkIfValidNumberOfNeighbors(Condition condition) {
+        if (condition.NCount > 8) {
+            error("Neighbors can not be greater than 8", Literals.CONDITION__NCOUNT)
+        }
+        if (condition.NCount < 0) {
+            // Now this reference will work:
+            error("The number of neighbors cannot be negative", Literals.CONDITION__NCOUNT, INVALID_NEIGHBOR_COUNT)
+        }
+    }
+
+    @Check
+    def checkIfInitialCellsAreInGrid(Grid grid) {
+        for (PopulatedCell cell : grid.populatedCells) {
+            if (cell.x > grid.size.width || cell.y > grid.size.height || cell.x < 0 || cell.y < 0) {
+                error("Cell cannot be outside the grid", Literals.GRID__POPULATED_CELLS)
+            }
+        }
+    }
+    
+    @Check
+    def checkIfGridIsBigEnough(Grid grid) {
+        if (grid.size.height < 10 || grid.size.width < 10) {
+            error("The world is too small! It should have at least width and height of 10.", Literals.GRID__SIZE)
+        }
+    }
+    
+    @Check
+    def doIdenticalCoordinatedExist(Grid grid) {
+        var populatedCells = grid.populatedCells
+        for(var i=0; i < populatedCells.size; i++){
+            for(var j=i+1; j < populatedCells.size; j++){
+                if(populatedCells.get(i).x == populatedCells.get(j).x && 
+                   populatedCells.get(i).y == populatedCells.get(j).y) {
+                    error("Identical coordinates are not allowed", Literals.GRID__POPULATED_CELLS, j)
+                }
+            }
+        }
+    }
+
+    @Check 
+    def doRulesExist(Rules rules) {
+        if (rules.rules.size() == 0) {
+            warning("Game has no rules, so everyone and everything will die", null)
+        }
+    }
+
+    @Check
+    def checkDeadSurviving(Rule rule) {
+        if (rule.state == 'dead' && rule.result == 'survives'){
+            warning("A dead cell cannot survive. Only living cells can survive.", Literals.RULE__STATE)
+        }
+    }
+    
+    @Check
+    def checkLivingPopulating(Rule rule) {
+        if (rule.state == 'living' && rule.result == 'populates'){
+            warning("A living cell cannot be populated. Only dead cells can be populated.", Literals.RULE__STATE)
+        }
+    }
+    
+    @Check
+    def checkDeadDying(Rule rule) {
+        if (rule.state == 'dead' && rule.result == 'dies'){
+            warning("A dead cell cannot die. How do you kill that which has no life?", Literals.RULE__STATE)
+        }
+    }
+}
