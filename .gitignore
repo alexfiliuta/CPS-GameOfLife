@@ -1,0 +1,13 @@
+.metadata/
+*.lock
+
+bin/
+**/*.class
+
+**/src-gen/*
+**/xtend-gen/*
+**/model/generated/
+
+
+.DS_Store
+Thumbs.db
